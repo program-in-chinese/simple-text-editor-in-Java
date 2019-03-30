@@ -2,6 +2,7 @@ package 文本编辑器;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
@@ -24,6 +25,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
 
 public class 文本编辑器 extends JFrame {
@@ -32,6 +34,8 @@ public class 文本编辑器 extends JFrame {
   private static final String 默认文件名 = "无名";
 
   private JTextArea 区域 = new JTextArea(20, 120);
+
+  private JTextArea 命令 = new JTextArea(20, 20);
   private JFileChooser 对话框 = new JFileChooser(System.getProperty("user.dir"));
   private String 当前文件 = 默认文件名;
   private boolean 已改 = false;
@@ -42,6 +46,29 @@ public class 文本编辑器 extends JFrame {
       已改 = true;
       保存.setEnabled(true);
       另存为.setEnabled(true);
+    }
+  };
+
+  private KeyListener 命令监听 = new KeyAdapter() {
+    @Override
+    public void keyPressed(KeyEvent e) {
+      String 此行 = "";
+      if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+        int 行数 = 命令.getLineCount();
+        if (行数 == 1) {
+          此行 = 命令.getText();
+        } else {
+          int 上一行末位置 = 0;
+          try {
+            上一行末位置 = 命令.getLineEndOffset(行数 - 2);
+          } catch (BadLocationException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+          }
+          此行 = 命令.getText().substring(上一行末位置);
+        }
+        System.out.println(此行);
+      }
     }
   };
   Action 新建 = new AbstractAction("新建", new ImageIcon(图标目录 + "new.gif")) {
@@ -94,10 +121,16 @@ public class 文本编辑器 extends JFrame {
   Action 粘贴 = 操作表.get(DefaultEditorKit.pasteAction);
 
   public 文本编辑器() {
+    setLayout(new GridLayout(2, 1));
     区域.setFont(new Font("Monospaced", Font.PLAIN, 12));
-    JScrollPane 滚动条 = new JScrollPane(区域, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+    JScrollPane 文本区 = new JScrollPane(区域, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-    add(滚动条, BorderLayout.CENTER);
+    add(文本区, BorderLayout.CENTER);
+
+    命令.setFont(new Font("Monospaced", Font.PLAIN, 12));
+    JScrollPane 命令区 = new JScrollPane(命令, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+        JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+    add(命令区);
 
     JMenuBar 菜单栏 = new JMenuBar();
     setJMenuBar(菜单栏);
@@ -146,6 +179,7 @@ public class 文本编辑器 extends JFrame {
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     pack();
     区域.addKeyListener(监听按键);
+    命令.addKeyListener(命令监听);
     setTitle(当前文件);
     setVisible(true);
   }
