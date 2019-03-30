@@ -28,9 +28,11 @@ import javax.swing.text.DefaultEditorKit;
 
 public class 文本编辑器 extends JFrame {
 
+  private static final String 默认文件名 = "无名";
+
   private JTextArea 区域 = new JTextArea(20, 120);
   private JFileChooser 对话框 = new JFileChooser(System.getProperty("user.dir"));
-  private String 当前文件 = "Untitled";
+  private String 当前文件 = 默认文件名;
   private boolean 已改 = false;
 
   private KeyListener 监听按键 = new KeyAdapter() {
@@ -41,19 +43,19 @@ public class 文本编辑器 extends JFrame {
       另存为.setEnabled(true);
     }
   };
-  Action New = new AbstractAction("New", new ImageIcon("Path/image.gif")) {
+  Action 新建 = new AbstractAction("新建", new ImageIcon("new.gif")) {
     @Override
     public void actionPerformed(ActionEvent e) {
       保存旧文件();
       区域.setText("");
-      当前文件 = "Untitled";
+      当前文件 = 默认文件名;
       setTitle(当前文件);
       已改 = false;
       保存.setEnabled(false);
       另存为.setEnabled(false);
     }
   };
-  Action 打开 = new AbstractAction("Open", new ImageIcon("open.gif")) {
+  Action 打开 = new AbstractAction("打开", new ImageIcon("open.gif")) {
     @Override
     public void actionPerformed(ActionEvent e) {
       保存旧文件();
@@ -63,22 +65,22 @@ public class 文本编辑器 extends JFrame {
       另存为.setEnabled(true);
     }
   };
-  Action 保存 = new AbstractAction("Save", new ImageIcon("save.gif")) {
+  Action 保存 = new AbstractAction("保存", new ImageIcon("save.gif")) {
     @Override
     public void actionPerformed(ActionEvent e) {
-      if (!当前文件.equals("Untitled"))
+      if (!当前文件.equals(默认文件名))
         保存文件(当前文件);
       else
         另存文件为();
     }
   };
-  Action 另存为 = new AbstractAction("Save as...") {
+  Action 另存为 = new AbstractAction("另存为...") {
     @Override
     public void actionPerformed(ActionEvent e) {
       另存文件为();
     }
   };
-  Action 退出 = new AbstractAction("Quit") {
+  Action 退出 = new AbstractAction("退出") {
     @Override
     public void actionPerformed(ActionEvent e) {
       保存旧文件();
@@ -98,12 +100,12 @@ public class 文本编辑器 extends JFrame {
 
     JMenuBar 菜单栏 = new JMenuBar();
     setJMenuBar(菜单栏);
-    JMenu 文件菜单 = new JMenu("File");
-    JMenu 编辑菜单 = new JMenu("Edit");
+    JMenu 文件菜单 = new JMenu("文件");
+    JMenu 编辑菜单 = new JMenu("编辑");
     菜单栏.add(文件菜单);
     菜单栏.add(编辑菜单);
 
-    文件菜单.add(New);
+    文件菜单.add(新建);
     文件菜单.add(打开);
     文件菜单.add(保存);
     文件菜单.add(退出);
@@ -117,13 +119,13 @@ public class 文本编辑器 extends JFrame {
     编辑菜单.add(拷贝);
     编辑菜单.add(粘贴);
 
-    编辑菜单.getItem(0).setText("Cut out");
-    编辑菜单.getItem(1).setText("Copy");
-    编辑菜单.getItem(2).setText("Paste");
+    编辑菜单.getItem(0).setText("剪切");
+    编辑菜单.getItem(1).setText("拷贝");
+    编辑菜单.getItem(2).setText("粘贴");
 
     JToolBar 工具栏 = new JToolBar();
     add(工具栏, BorderLayout.NORTH);
-    工具栏.add(New);
+    工具栏.add(新建);
     工具栏.add(打开);
     工具栏.add(保存);
     工具栏.addSeparator();
@@ -154,8 +156,8 @@ public class 文本编辑器 extends JFrame {
 
   private void 保存旧文件() {
     if (已改) {
-      if (JOptionPane.showConfirmDialog(this, "Would you like to save " + 当前文件 + " ?",
-          "Save", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+      if (JOptionPane.showConfirmDialog(this, "保存 " + 当前文件 + " 吗?", "保存",
+          JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
         保存文件(当前文件);
     }
   }
@@ -170,7 +172,7 @@ public class 文本编辑器 extends JFrame {
       已改 = false;
     } catch (IOException e) {
       Toolkit.getDefaultToolkit().beep();
-      JOptionPane.showMessageDialog(this, "Editor can't find the file called " + 文件名);
+      JOptionPane.showMessageDialog(this, "找不到 " + 文件名);
     }
   }
 
