@@ -28,6 +28,7 @@ import javax.swing.text.DefaultEditorKit;
 
 public class 文本编辑器 extends JFrame {
 
+  private static final String 图标目录 = "图标/";
   private static final String 默认文件名 = "无名";
 
   private JTextArea 区域 = new JTextArea(20, 120);
@@ -43,7 +44,7 @@ public class 文本编辑器 extends JFrame {
       另存为.setEnabled(true);
     }
   };
-  Action 新建 = new AbstractAction("新建", new ImageIcon("new.gif")) {
+  Action 新建 = new AbstractAction("新建", new ImageIcon(图标目录 + "new.gif")) {
     @Override
     public void actionPerformed(ActionEvent e) {
       保存旧文件();
@@ -55,7 +56,7 @@ public class 文本编辑器 extends JFrame {
       另存为.setEnabled(false);
     }
   };
-  Action 打开 = new AbstractAction("打开", new ImageIcon("open.gif")) {
+  Action 打开 = new AbstractAction("打开", new ImageIcon(图标目录 + "open.gif")) {
     @Override
     public void actionPerformed(ActionEvent e) {
       保存旧文件();
@@ -65,7 +66,7 @@ public class 文本编辑器 extends JFrame {
       另存为.setEnabled(true);
     }
   };
-  Action 保存 = new AbstractAction("保存", new ImageIcon("save.gif")) {
+  Action 保存 = new AbstractAction("保存", new ImageIcon(图标目录 + "save.gif")) {
     @Override
     public void actionPerformed(ActionEvent e) {
       if (!当前文件.equals(默认文件名))
@@ -133,11 +134,11 @@ public class 文本编辑器 extends JFrame {
     JButton 剪切按钮 = 工具栏.add(剪切), 拷贝按钮 = 工具栏.add(拷贝), 粘贴按钮 = 工具栏.add(粘贴);
 
     剪切按钮.setText(null);
-    剪切按钮.setIcon(new ImageIcon("cut.gif"));
+    剪切按钮.setIcon(new ImageIcon(图标目录 + "cut.gif"));
     拷贝按钮.setText(null);
-    拷贝按钮.setIcon(new ImageIcon("copy.gif"));
+    拷贝按钮.setIcon(new ImageIcon(图标目录 + "copy.gif"));
     粘贴按钮.setText(null);
-    粘贴按钮.setIcon(new ImageIcon("paste.gif"));
+    粘贴按钮.setIcon(new ImageIcon(图标目录 + "paste.gif"));
 
     保存.setEnabled(false);
     另存为.setEnabled(false);
