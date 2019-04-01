@@ -11,7 +11,6 @@ import javax.swing.JList;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 
 public class 提示框 {
@@ -31,13 +30,13 @@ public class 提示框 {
   }
 
   public void 更新(int 文本位置, String 提示源词, Point 显示位置) {
-    this.文本位置 = 文本位置;
-    this.提示源词 = 提示源词;
-    弹出菜单.removeAll();
     String[] 提示列表 = 提示词典.取提示(提示源词);
     if (提示列表 == null || 提示列表.length == 0) {
       return;
     }
+    this.文本位置 = 文本位置;
+    this.提示源词 = 提示源词;
+    弹出菜单.removeAll();
     弹出菜单.add(列表 = 创建提示列表(提示列表), BorderLayout.CENTER);
     弹出菜单.show(文本区, 显示位置.x, 文本区.getBaseline(0, 0) + 显示位置.y);
   }
@@ -99,22 +98,10 @@ public class 提示框 {
   }
 
   public void 上移() {
-    int 序号 = Math.min(列表.getSelectedIndex() - 1, 0);
-    选择序号(序号);
+    列表.setSelectedIndex(Math.min(列表.getSelectedIndex() - 1, 0));
   }
 
   public void 下移() {
-    int 序号 = Math.min(列表.getSelectedIndex() + 1, 列表.getModel().getSize() - 1);
-    选择序号(序号);
-  }
-
-  private void 选择序号(int index) {
-    列表.setSelectedIndex(index);
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        文本区.setCaretPosition(文本位置);
-      };
-    });
+    列表.setSelectedIndex(Math.min(列表.getSelectedIndex() + 1, 列表.getModel().getSize() - 1));
   }
 }

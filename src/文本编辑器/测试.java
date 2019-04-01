@@ -1,12 +1,10 @@
 package 文本编辑器;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -33,7 +31,6 @@ public class 测试 {
   }
 
   protected void 显示提示() {
-    隐藏提示();
     final int 文本位置 = 文本区.getCaretPosition();
     Point 界面位置;
     try {
@@ -70,19 +67,11 @@ public class 测试 {
     });
   }
 
-  private void 隐藏提示() {
-    if (提示 != null) {
-      提示.隐藏();
-    }
-  }
-
   protected void 初始化() {
-    final JFrame 框 = new JFrame();
-    框.setTitle("测试框");
+    final JFrame 框 = new JFrame("测试框");
     框.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     JPanel 面板 = new JPanel(new BorderLayout());
     文本区 = new JTextArea(24, 80);
-    文本区.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
     文本区.addKeyListener(new KeyListener() {
 
       @Override
@@ -94,8 +83,6 @@ public class 测试 {
           提示.上移();
         } else if (Character.isLetterOrDigit(键入字符)) {
           随后显示提示();
-        } else if (Character.isWhitespace(键入字符)) {
-          隐藏提示();
         }
       }
 
