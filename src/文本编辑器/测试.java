@@ -19,9 +19,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.BadLocationException;
 
-// 输入至少一个匹配词典的字母后显示提示框, 在选中后空格自动补全
-
-// TODO: 弹出提示框后, 如果继续键入, 提示框隐藏后, 根据新键入继续提示
+// 英文输入至少一个匹配词典的字母后显示提示框, 上下光标选中中文后空格键自动补全
+// 弹出提示框后, 如果继续键入, 提示框隐藏后, 根据新键入继续提示
 public class 测试 {
 
   private static final HashMap<String, String[]> 提示词典 = new HashMap<>();
@@ -78,10 +77,13 @@ public class 测试 {
           if (e.getKeyChar() == KeyEvent.VK_SPACE) {
             if (提示 != null) {
               if (提示.插入选择文本()) {
-                e.consume();
                 隐藏提示();
               }
             }
+          } else {
+            隐藏提示();
+            文本区.requestFocusInWindow();
+            文本区.dispatchEvent(e);
           }
         }
 
@@ -202,14 +204,14 @@ public class 测试 {
 
       @Override
       public void keyReleased(KeyEvent e) {
-
+        char 键入字符 = e.getKeyChar();
         if (e.getKeyCode() == KeyEvent.VK_DOWN && 提示 != null) {
           提示.下移();
         } else if (e.getKeyCode() == KeyEvent.VK_UP && 提示 != null) {
           提示.上移();
-        } else if (Character.isLetterOrDigit(e.getKeyChar())) {
+        } else if (Character.isLetterOrDigit(键入字符)) {
           随后显示提示();
-        } else if (Character.isWhitespace(e.getKeyChar())) {
+        } else if (Character.isWhitespace(键入字符)) {
           隐藏提示();
         }
       }
