@@ -57,8 +57,11 @@ public class 测试 {
     }
     final String 提示源词 = 所有文本.substring(起始, 文本位置);
 
-    // TODO: 避免每次创建
-    提示 = new 提示框(文本区, 文本位置, 提示源词, 界面位置);
+    if (提示 == null) {
+      提示 = new 提示框(文本区, 文本位置, 提示源词, 界面位置);
+    } else {
+      提示.更新(文本位置, 提示源词, 界面位置);
+    }
     SwingUtilities.invokeLater(new Runnable() {
       @Override
       public void run() {

@@ -19,17 +19,21 @@ public class 提示框 {
   private JList<String> 列表;
   private JPopupMenu 弹出菜单;
   private String 提示源词;
-  private final int 文本位置;
+  private int 文本位置;
   private JTextArea 文本区;
 
   public 提示框(JTextArea 文本区, int 文本位置, String 提示源词, Point 显示位置) {
-    this.文本位置 = 文本位置;
-    this.提示源词 = 提示源词;
     this.文本区 = 文本区;
     弹出菜单 = new JPopupMenu();
-    弹出菜单.removeAll();
     弹出菜单.setOpaque(false);
     弹出菜单.setBorder(null);
+    更新(文本位置, 提示源词, 显示位置);
+  }
+
+  public void 更新(int 文本位置, String 提示源词, Point 显示位置) {
+    this.文本位置 = 文本位置;
+    this.提示源词 = 提示源词;
+    弹出菜单.removeAll();
     String[] 提示列表 = 提示词典.取提示(提示源词);
     if (提示列表 == null || 提示列表.length == 0) {
       return;
@@ -105,7 +109,6 @@ public class 提示框 {
   }
 
   private void 选择序号(int index) {
-    final int 文本位置 = 文本区.getCaretPosition();
     列表.setSelectedIndex(index);
     SwingUtilities.invokeLater(new Runnable() {
       @Override
