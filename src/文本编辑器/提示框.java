@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JList;
@@ -16,20 +15,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 
 public class 提示框 {
-
-  private static final HashMap<String, String[]> 提示词典 = new HashMap<>();
-  static {
-    提示词典.put("xj", new String[] {"新建"});
-    提示词典.put("dk", new String[] {"打开"});
-    提示词典.put("bc", new String[] {"保存"});
-    提示词典.put("jq", new String[] {"剪切"});
-    提示词典.put("fz", new String[] {"复制"});
-    提示词典.put("nt", new String[] {"粘贴"});
-    提示词典.put("zt", new String[] {"粘贴"});
-    提示词典.put("tc", new String[] {"退出"});
-    提示词典.put("j", new String[] {"新建", "剪切"});
-    提示词典.put("t", new String[] {"退出", "粘贴"});
-  }
 
   private JList<String> 列表;
   private JPopupMenu 弹出菜单;
@@ -45,7 +30,7 @@ public class 提示框 {
     弹出菜单.removeAll();
     弹出菜单.setOpaque(false);
     弹出菜单.setBorder(null);
-    String[] 提示列表 = 提示词典.get(提示源词);
+    String[] 提示列表 = 提示词典.取提示(提示源词);
     if (提示列表 == null || 提示列表.length == 0) {
       return;
     }
