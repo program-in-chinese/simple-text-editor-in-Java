@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
@@ -21,29 +19,25 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.BadLocationException;
 
-// 输入两个字母以上则显示提示框, 仅在鼠标双击后补完
-/*
- * xj 新建
- * dk 打开
- * bc 保存
- * jq 剪切
- * fz 复制
- * nt/zt 粘贴
- */
+// 输入至少一个匹配词典的字母后显示提示框, 在选中后空格自动补全
+
 // TODO: 弹出提示框后, 如果继续键入, 提示框隐藏后, 根据新键入继续提示
 public class 测试 {
 
   private static final HashMap<String, String[]> 提示词典 = new HashMap<>();
   static {
-    提示词典.put("xj", new String[]{"新建"});
-    提示词典.put("dk", new String[]{"打开"});
-    提示词典.put("bc", new String[]{"保存"});
-    提示词典.put("jq", new String[]{"剪切"});
-    提示词典.put("fz", new String[]{"复制"});
-    提示词典.put("nt", new String[]{"粘贴"});
-    提示词典.put("zt", new String[]{"粘贴"});
-    提示词典.put("j", new String[]{"新建", "剪切"});
+    提示词典.put("xj", new String[] {"新建"});
+    提示词典.put("dk", new String[] {"打开"});
+    提示词典.put("bc", new String[] {"保存"});
+    提示词典.put("jq", new String[] {"剪切"});
+    提示词典.put("fz", new String[] {"复制"});
+    提示词典.put("nt", new String[] {"粘贴"});
+    提示词典.put("zt", new String[] {"粘贴"});
+    提示词典.put("tc", new String[] {"退出"});
+    提示词典.put("j", new String[] {"新建", "剪切"});
+    提示词典.put("t", new String[] {"退出", "粘贴"});
   }
+
   public class 提示框 {
     private JList<String> 列表;
     private JPopupMenu 弹出菜单;
@@ -77,13 +71,30 @@ public class 测试 {
       列表.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
       列表.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       列表.setSelectedIndex(0);
-      列表.addMouseListener(new MouseAdapter() {
+      列表.addKeyListener(new KeyListener() {
+
         @Override
-        public void mouseClicked(MouseEvent e) {
-          if (e.getClickCount() == 2) {
-            插入选择文本();
-            隐藏提示();
+        public void keyTyped(KeyEvent e) {
+          if (e.getKeyChar() == KeyEvent.VK_SPACE) {
+            if (提示 != null) {
+              if (提示.插入选择文本()) {
+                e.consume();
+                隐藏提示();
+              }
+            }
           }
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+          // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+          // TODO Auto-generated method stub
+
         }
       });
       return 列表;
@@ -190,29 +201,8 @@ public class 测试 {
     文本区.addKeyListener(new KeyListener() {
 
       @Override
-      public void keyTyped(KeyEvent e) {
-        if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-          if (提示 != null) {
-            if (提示.插入选择文本()) {
-              e.consume();
-              final int position = 文本区.getCaretPosition();
-              SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                  try {
-                    文本区.getDocument().remove(position - 1, 1);
-                  } catch (BadLocationException e) {
-                    e.printStackTrace();
-                  }
-                }
-              });
-            }
-          }
-        }
-      }
-
-      @Override
       public void keyReleased(KeyEvent e) {
+
         if (e.getKeyCode() == KeyEvent.VK_DOWN && 提示 != null) {
           提示.下移();
         } else if (e.getKeyCode() == KeyEvent.VK_UP && 提示 != null) {
@@ -226,6 +216,12 @@ public class 测试 {
 
       @Override
       public void keyPressed(KeyEvent e) {
+
+      }
+
+      @Override
+      public void keyTyped(KeyEvent e) {
+        // TODO Auto-generated method stub
 
       }
     });
