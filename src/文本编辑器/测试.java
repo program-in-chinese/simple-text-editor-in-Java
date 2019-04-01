@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -21,10 +22,30 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.BadLocationException;
 
 // 输入两个字母以上则显示提示框, 仅在鼠标双击后补完
+/*
+ * xj 新建
+ * dk 打开
+ * bc 保存
+ * jq 剪切
+ * fz 复制
+ * nt/zt 粘贴
+ */
+// TODO: 弹出提示框后, 如果继续键入, 提示框隐藏后, 根据新键入继续提示
 public class 测试 {
 
+  private static final HashMap<String, String[]> 提示词典 = new HashMap<>();
+  static {
+    提示词典.put("xj", new String[]{"新建"});
+    提示词典.put("dk", new String[]{"打开"});
+    提示词典.put("bc", new String[]{"保存"});
+    提示词典.put("jq", new String[]{"剪切"});
+    提示词典.put("fz", new String[]{"复制"});
+    提示词典.put("nt", new String[]{"粘贴"});
+    提示词典.put("zt", new String[]{"粘贴"});
+    提示词典.put("j", new String[]{"新建", "剪切"});
+  }
   public class 提示框 {
-    private JList 列表;
+    private JList<String> 列表;
     private JPopupMenu 弹出菜单;
     private String 提示源词;
     private final int 文本位置;
@@ -36,7 +57,11 @@ public class 测试 {
       弹出菜单.removeAll();
       弹出菜单.setOpaque(false);
       弹出菜单.setBorder(null);
-      弹出菜单.add(列表 = 创建提示列表(文本位置, 提示源词), BorderLayout.CENTER);
+      String[] 提示列表 = 提示词典.get(提示源词);
+      if (提示列表 == null || 提示列表.length == 0) {
+        return;
+      }
+      弹出菜单.add(列表 = 创建提示列表(提示列表), BorderLayout.CENTER);
       弹出菜单.show(文本区, 显示位置.x, 文本区.getBaseline(0, 0) + 显示位置.y);
     }
 
@@ -47,15 +72,8 @@ public class 测试 {
       }
     }
 
-    // TODO: position无用?
-    private JList 创建提示列表(final int position, final String 提示源词) {
-      Object[] 提示列表 = new Object[10];
-
-      // TODO: 此处用定制词典
-      for (int i = 0; i < 提示列表.length; i++) {
-        提示列表[i] = 提示源词 + i;
-      }
-      JList 列表 = new JList(提示列表);
+    private JList<String> 创建提示列表(final String[] 提示列表) {
+      JList<String> 列表 = new JList<>(提示列表);
       列表.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
       列表.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       列表.setSelectedIndex(0);
@@ -64,6 +82,7 @@ public class 测试 {
         public void mouseClicked(MouseEvent e) {
           if (e.getClickCount() == 2) {
             插入选择文本();
+            隐藏提示();
           }
         }
       });
@@ -73,13 +92,16 @@ public class 测试 {
     public boolean 插入选择文本() {
       if (列表.getSelectedValue() != null) {
         try {
-          final String 选中提示 = ((String) 列表.getSelectedValue()).substring(提示源词.length());
-          文本区.getDocument().insertString(文本位置, 选中提示, null);
+          final String 选中提示 = 列表.getSelectedValue();
+          int 当前文本位置 = 文本位置;
+          int 提示源词长度 = 提示源词.length();
+          当前文本位置 -= 提示源词长度;
+          文本区.getDocument().remove(当前文本位置, 提示源词长度);
+          文本区.getDocument().insertString(当前文本位置, 选中提示, null);
           return true;
         } catch (BadLocationException e1) {
           e1.printStackTrace();
         }
-        隐藏提示();
       }
       return false;
     }
@@ -143,9 +165,6 @@ public class 测试 {
       return;
     }
     final String 提示源词 = 所有文本.substring(起始, 文本位置);
-    if (提示源词.length() < 2) {
-      return;
-    }
     提示 = new 提示框(文本区, 文本位置, 提示源词, 界面位置);
     SwingUtilities.invokeLater(new Runnable() {
       @Override
