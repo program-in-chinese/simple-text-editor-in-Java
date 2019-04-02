@@ -42,20 +42,11 @@ public class 测试 {
       e2.printStackTrace();
       return;
     }
-    String 所有文本 = 文本区.getText();
-    int 起始 = Math.max(0, 文本位置 - 1);
-    while (起始 > 0) {
-      if (!Character.isWhitespace(所有文本.charAt(起始))) {
-        起始--;
-      } else {
-        起始++;
-        break;
-      }
-    }
-    if (起始 > 文本位置) {
+
+    final String 提示源词 = 取提示源词(文本位置);
+    if (提示源词 == null) {
       return;
     }
-    final String 提示源词 = 所有文本.substring(起始, 文本位置);
 
     if (提示 == null) {
       提示 = new 提示框(文本区, 文本位置, 提示源词, 界面位置);
@@ -68,6 +59,25 @@ public class 测试 {
         文本区.requestFocusInWindow();
       }
     });
+  }
+
+  private String 取提示源词(int 文本位置) {
+    String 所有文本 = 文本区.getText();
+    int 起始 = 寻找上一处空白位置(所有文本, 文本位置);
+    return 起始 < 文本位置 ? 所有文本.substring(起始, 文本位置) : null;
+  }
+
+  private int 寻找上一处空白位置(String 所有文本, int 文本位置) {
+    int 起始 = Math.max(0, 文本位置 - 1);
+    while (起始 > 0) {
+      if (!Character.isWhitespace(所有文本.charAt(起始))) {
+        起始--;
+      } else {
+        起始++;
+        break;
+      }
+    }
+    return 起始;
   }
 
   private void 初始化() {
