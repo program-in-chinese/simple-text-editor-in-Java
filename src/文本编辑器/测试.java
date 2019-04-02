@@ -53,12 +53,6 @@ public class 测试 {
     } else {
       提示.更新(文本位置, 提示源词, 界面位置);
     }
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        文本区.requestFocusInWindow();
-      }
-    });
   }
 
   private String 取提示源词(int 文本位置) {
