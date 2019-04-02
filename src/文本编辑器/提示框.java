@@ -41,7 +41,7 @@ public class 提示框 {
     弹出菜单.show(文本区, 显示位置.x, 文本区.getBaseline(0, 0) + 显示位置.y);
   }
 
-  public void 隐藏() {
+  private void 隐藏() {
     弹出菜单.setVisible(false);
   }
 
@@ -67,23 +67,23 @@ public class 提示框 {
 
       @Override
       public void keyPressed(KeyEvent e) {
-        // TODO Auto-generated method stub
-
+        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+          下移();
+        } else if (e.getKeyCode() == KeyEvent.VK_UP) {
+          上移();
+        }
       }
 
       @Override
-      public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
-
-      }
+      public void keyReleased(KeyEvent e) {}
     });
     return 列表;
   }
 
-  public boolean 插入选择文本() {
-    if (列表.getSelectedValue() != null) {
+  private boolean 插入选择文本() {
+    final String 选中提示 = 列表.getSelectedValue();
+    if (选中提示 != null) {
       try {
-        final String 选中提示 = 列表.getSelectedValue();
         int 当前文本位置 = 文本位置;
         int 提示源词长度 = 提示源词.length();
         当前文本位置 -= 提示源词长度;
@@ -97,11 +97,11 @@ public class 提示框 {
     return false;
   }
 
-  public void 上移() {
+  private void 上移() {
     列表.setSelectedIndex(Math.min(列表.getSelectedIndex() - 1, 0));
   }
 
-  public void 下移() {
+  private void 下移() {
     列表.setSelectedIndex(Math.min(列表.getSelectedIndex() + 1, 列表.getModel().getSize() - 1));
   }
 }

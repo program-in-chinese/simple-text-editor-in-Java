@@ -15,12 +15,15 @@ import javax.swing.text.BadLocationException;
 
 // 英文输入至少一个匹配词典的字母后显示提示框, 上下光标选中中文后空格键自动补全
 // 弹出提示框后, 如果继续键入, 提示框隐藏后, 根据新键入继续提示
+// TODO: 如果退格删除, 应继续按照余下内容提示
+// TODO: 如开启了其他中文输入法, 某些情况下会互相干扰
+
 public class 测试 {
 
   private 提示框 提示;
   private JTextArea 文本区;
 
-  protected void 随后显示提示() {
+  private void 随后显示提示() {
     SwingUtilities.invokeLater(new Runnable() {
       @Override
       public void run() {
@@ -30,7 +33,7 @@ public class 测试 {
     });
   }
 
-  protected void 显示提示() {
+  private void 显示提示() {
     final int 文本位置 = 文本区.getCaretPosition();
     Point 界面位置;
     try {
@@ -67,7 +70,7 @@ public class 测试 {
     });
   }
 
-  protected void 初始化() {
+  private void 初始化() {
     final JFrame 框 = new JFrame("测试框");
     框.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     JPanel 面板 = new JPanel(new BorderLayout());
@@ -75,27 +78,16 @@ public class 测试 {
     文本区.addKeyListener(new KeyListener() {
 
       @Override
-      public void keyReleased(KeyEvent e) {
-        char 键入字符 = e.getKeyChar();
-        if (e.getKeyCode() == KeyEvent.VK_DOWN && 提示 != null) {
-          提示.下移();
-        } else if (e.getKeyCode() == KeyEvent.VK_UP && 提示 != null) {
-          提示.上移();
-        } else if (Character.isLetterOrDigit(键入字符)) {
-          随后显示提示();
-        }
-      }
-
-      @Override
-      public void keyPressed(KeyEvent e) {
-
-      }
-
-      @Override
       public void keyTyped(KeyEvent e) {
-        // TODO Auto-generated method stub
-
+        随后显示提示();
       }
+
+      @Override
+      public void keyReleased(KeyEvent e) {}
+
+      @Override
+      public void keyPressed(KeyEvent e) {}
+
     });
     面板.add(文本区, BorderLayout.CENTER);
     框.add(面板);
