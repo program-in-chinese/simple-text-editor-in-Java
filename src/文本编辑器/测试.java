@@ -90,7 +90,11 @@ public class 测试 {
       public void keyReleased(KeyEvent e) {}
 
       @Override
-      public void keyPressed(KeyEvent e) {}
+      public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+          随后显示提示();
+        }
+      }
 
     });
     面板.add(文本区, BorderLayout.CENTER);

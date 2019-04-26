@@ -71,6 +71,10 @@ public class 提示框 {
           下移();
         } else if (e.getKeyCode() == KeyEvent.VK_UP) {
           上移();
+        } else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+          隐藏();
+          文本区.requestFocusInWindow();
+          文本区.dispatchEvent(e);
         }
       }
 
